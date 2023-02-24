@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\SendMailController;
+use App\Mail\MyTestEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('send-mail', [SendMailController::class, 'sendMail']);
+
+Route::get('/testroute', function() {
+    $name = "Funny Coder";
+
+    Mail::to('ikysantoso1@gmail.com')->send(new MyTestEmail('dicky'));
+});
