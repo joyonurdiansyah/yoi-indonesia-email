@@ -16,7 +16,9 @@ class SendMailController extends Controller
 {
     public function sendMail(Request $request)
     {
-        $this->registrationNewUser('dicky', 'ikysantoso1@gmail.com', 'password');
+        $result = $this->registrationNewUser($request['name'], $request['email'], $request['password'], $request['activation_code']);
+
+        printf($result);
 
         return 'success';
     }
@@ -36,12 +38,10 @@ class SendMailController extends Controller
         // Setup request email that will be sent to SendInBlue
         $sendSmtpEmail = new SendSmtpEmail([
             'subject' => $subject,
-            'sender' => ['name' => 'YOI Indonesia', 'email' => 'no-reply@yoiindonesia.com'],
+            'sender' => ['name' => 'YOI Indonesia', 'email' => 'admin@yoiindonesia.com'],
             'to' => [[ 'name' => $name, 'email' => $address]],
             'htmlContent' => $mail_content
         ]);
-
-        printf($sendSmtpEmail);
 
         // Do sending transaction email with SendInBlue
         return $apiInstance->sendTransacEmail($sendSmtpEmail);
@@ -52,14 +52,15 @@ class SendMailController extends Controller
      *
      * @throws ApiException
      */
-    public function registrationNewUser($name, $email, $password): CreateSmtpEmail
+    public function registrationNewUser($name, $email, $password, $activation_code): CreateSmtpEmail
     {
         $subject = 'Registrasi Akun Baru';
 
         $data = array(
             'name'          => $name,
             'email'         => $email,
-            'password'      => $password
+            'password'      => $password,
+            'activation_code' => $activation_code
         );
 
         $mail_content = view('mail')->with($data)->render();
